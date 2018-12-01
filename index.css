@@ -1,7 +1,29 @@
-body{
-    margin:0;
+body {
+    margin: 0;
 }
-#container{
-    border:1px solid ;
-
+.fl {
+    float: left;
+}
+.fr {
+    float: right;
+}
+.clear::after {
+    content: '';
+    display: block;
+    clear: both;
+}
+#container {
+    background-color: lightgreen;
+}
+#spaceSeat {
+    width: 50%;
+}
+#placementSeat {
+    width: 50%;
+}
+#spaceSeat > div {
+    margin-right: 0.1rem;
+    border: 0.05rem solid #40a57a;
+    float: left;
+    width:4rem;
 }

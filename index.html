@@ -8,28 +8,50 @@
 </head>
 <body>
 <div id="container">
-    fe
+    <div><h4>计分区</h4>
+        <div>xxx</div>
+    </div>
+    <div><h4>空档区</h4>
+        <div id="spaceSeat" class="fl">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+        <div id="placementSeat" class="fr">
+            <div></div>
+            <div></div>
+            <div></div>
+            <div></div>
+        </div>
+    </div>
+    <div><h4>主牌位</h4>
+
+    </div>
 </div>
 <script>
-    var src = 'common.js?v=' + Math.random();
-    var script = document.createElement('script');
-    script.src = src;
-    document.head.appendChild(script);
+	var src = 'common.js?v=' + Math.random();
+	var script = document.createElement('script');
+	script.src = src;
+	document.head.appendChild(script);
 </script>
 <script>
-    var href = 'index.css?v=' + Math.random();
-    var link = document.createElement('link');
-    link.href = href;
-    link.rel = "stylesheet";
-    document.head.appendChild(link);
+	var href = 'index.css?v=' + Math.random();
+	var link = document.createElement('link');
+	link.href = href;
+	link.rel = "stylesheet";
+	document.head.appendChild(link);
 </script>
 <script>
-    var src = 'index.js?v=' + Math.random();
-    var script = document.createElement('script');
-    script.src = src;
-    window.onload = function () {
-        document.head.appendChild(script);
-    }
+	var src = 'core.js?v=' + Math.random();
+	var script = document.createElement('script');
+	script.src = src;
+	document.head.appendChild(script);
 </script>
+<script>
+	var src = 'index.js?v=' + Math.random();
+	var script = document.createElement('script');
+	script.src = src;
+	document.head.appendChild(script);</script>
 </body>
 </html>
