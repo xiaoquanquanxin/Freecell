@@ -1,15 +1,15 @@
 //  核心
 function CoreInit(tagName, type) {
 	this.element = document.createElement(tagName);
-	this.setType(type);
+	this.setType('coreType', type);
 }
 
 (function () {
-	CoreInit.prototype.setType = function (type) {
-		this.element.dataset.type = type;
+	CoreInit.prototype.setType = function (typeName, typeValue) {
+		this.element.dataset[typeName] = typeValue;
 	};
-	CoreInit.prototype.getType = function (type) {
-		return this.element.dataset.type;
+	CoreInit.prototype.getType = function (typeName) {
+		return this.element.dataset.typeName;
 	};
 	CoreInit.prototype.appendTo = function (aim) {
 		if (aim instanceof Element && aim !== this.element) {
@@ -79,8 +79,12 @@ function Card(param) {
 
 
 //  位置
-function Seat() {
+function Seat(only, design) {
 	CoreInit.call(this, 'div', 'seat');
+	this.addClass('seat');
+	if (design) {
+		this.drawDesign();
+	}
 }
 
 (function () {
@@ -88,5 +92,12 @@ function Seat() {
 	};
 	Inh.prototype = CoreInit.prototype;
 	Seat.prototype = new Inh();
+	Seat.prototype.designArray = ['spade', 'heart', 'club', 'diamond'];
+	Seat.prototype.designIndex = 0;
+	Seat.prototype.drawDesign = function () {
+		var type = this.designArray[Seat.prototype.designIndex++];
+		this.setType('designType',type);
+	};
+
 }());
 

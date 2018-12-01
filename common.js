@@ -6,7 +6,7 @@ var App = (function (win) {
 
 	//  移动端字号
 	function mobileResize() {
-		document.documentElement.style.fontSize = win.innerWidth / 10 + 'px';
+		document.documentElement.style.fontSize = Math.min(win.innerWidth, 960) / 10 + 'px';
 	}
 
 	//  是移动端
