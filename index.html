@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -7,6 +7,29 @@
     <title>空当接龙</title>
 </head>
 <body>
-
+<div id="container">
+    fe
+</div>
+<script>
+    var src = 'common.js?v=' + Math.random();
+    var script = document.createElement('script');
+    script.src = src;
+    document.head.appendChild(script);
+</script>
+<script>
+    var href = 'index.css?v=' + Math.random();
+    var link = document.createElement('link');
+    link.href = href;
+    link.rel = "stylesheet";
+    document.head.appendChild(link);
+</script>
+<script>
+    var src = 'index.js?v=' + Math.random();
+    var script = document.createElement('script');
+    script.src = src;
+    window.onload = function () {
+        document.head.appendChild(script);
+    }
+</script>
 </body>
 </html>
