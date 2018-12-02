@@ -2,6 +2,11 @@
 function CoreInit(tagName, type) {
 	this.element = document.createElement(tagName);
 	this.setType('coreType', type);
+	this.element.getInstance = (function (t) {
+		return function () {
+			return t;
+		}
+	}(this));
 }
 
 (function () {
@@ -10,7 +15,13 @@ function CoreInit(tagName, type) {
 		return this;
 	};
 	CoreInit.prototype.getType = function (typeName) {
-		return this.element.dataset.typeName;
+		if (typeName === undefined) {
+			return this.element.dataset;
+		} else if (typeof  typeName === 'string') {
+			return this.element.dataset[typeName];
+		} else {
+			throw new Error('\n错误记录：CoreInit.prototype.removeFrom\n错误原因：目标对象不为父级元素');
+		}
 	};
 	//  DOM
 	CoreInit.prototype.appendTo = function (aim) {
@@ -32,6 +43,9 @@ function CoreInit(tagName, type) {
 			throw new Error('\n错误记录：CoreInit.prototype.removeFrom\n错误原因：错误的DOM目标对象或无法移除自身');
 		}
 		return this;
+	};
+	CoreInit.prototype.getNextElement = function () {
+		return this.element.nextElementSibling;
 	};
 	//  CLASS
 	CoreInit.prototype.addClass = function (cssName) {
@@ -87,6 +101,7 @@ function Card(index) {
 	CoreInit.call(this, 'div', 'card');
 	this.addClass('card');
 	this.drawPoint(index);
+	this.initEvent(index);
 }
 
 (function () {
@@ -111,17 +126,72 @@ function Card(index) {
 		Card.prototype.setTotalCard = arr;
 		return arr
 	};
+	Card.prototype.cardCount = function () {
+		return CoreInit.prototype.designArray.length * CoreInit.prototype.pointsArray.length;
+	};
 	Card.prototype.drawPoint = function (index) {
 		var arr = Card.prototype.setTotalCard[index];
-		this.setType('point', arr[0]);
+		this.setType('point', CoreInit.prototype.pointsArray.indexOf(arr[0]));
 		this.setType('design', arr[1]);
+		var color = !(CoreInit.prototype.designArray.indexOf(arr[1]) % 2) ? 'red' : 'black';
+		this.setType('color', color);
+		this.addClass(color);
 		this.addClass(arr[1]);
 		var span = new CoreInit('span', 'tag');
 		span.element.innerHTML = arr[0];
 		span.addClass('tag');
 		span.addClass(arr[1]);
 		span.appendTo(this.element);
+	};
+	Card.prototype.getDesign = function () {
+		return this.getType('design');
+	};
+	Card.prototype.getColor = function () {
+		return this.getType('color');
+	};
+	Card.prototype.getPoint = function () {
+		return Number(this.getType('point'));
+	};
+	//  注册事件
+	CoreInit.prototype.initEvent = function (index) {
+		this.element.addEventListener('mousedown', Card.prototype.mouseDown, false);
+		this.element.addEventListener('click', Card.prototype.mouseClick, false);
+	};
+	//   鼠标按下
+	CoreInit.prototype.mouseDown = function (e) {
+		var target = this;
+		// console.log(this);
+		// if (index === this.cardCount() - 1) {
+		// 	document.addEventListener('mousemove', Card.prototype.mouseMove, false);
+		// }
+		e.preventDefault();
+	};
+	//  鼠标点击
+	CoreInit.prototype.mouseClick = function (e) {
+		//  this === 实例的element
+		//  instance === 实例
+		var instance = this.getInstance();
+		var color = instance.getColor();
+		var point = instance.getPoint();
+		console.log(color, point);
+		var nextElement = instance.getNextElement();
+		if (nextElement) {
+			var nextInstance = nextElement.getInstance();
+			var nIC = nextInstance.getColor();
+			var nIP = nextInstance.getPoint();
+			if (nIC !== color && nIP === point - 1) {
+				console.log('合格的nextInstance', nextInstance);
+			}
+		}
+
+		instance.addClass('card-active');
+	};
+	//      鼠标移动
+	CoreInit.prototype.mouseMove = function (e) {
+		console.log(e)
+		console.log(e.target)
 	}
+
 }());
 
 //  位置
@@ -146,6 +216,4 @@ function Seat(only, design) {
 		this.setType('designType', type);
 		this.addClass(type);
 	};
-
 }());
-
