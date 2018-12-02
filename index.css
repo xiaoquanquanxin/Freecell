@@ -5,6 +5,9 @@ h4 {
     margin: 0;
     font-size: 0.32rem;
 }
+li {
+    list-style-type: none;
+}
 .fl {
     float: left;
 }
@@ -19,16 +22,17 @@ h4 {
 /*
     以上
 */
-
 #container {
     margin: auto;
     width: 9.8rem;
     padding: 0 0.1rem;
     background-color: #444444;
 }
+/*空当区*/
 #spaceSeat {
     width: 50%;
 }
+/*安置区*/
 #placementSeat {
     width: 50%;
 }
@@ -44,4 +48,12 @@ h4 {
 }
 .placementSeat {
     margin-left: 0.1rem;
+}
+/*操作区*/
+#operatingSeat {
+    padding: 0.15rem;
+    padding-right: 0;
+}
+#operatingSeat > div {
+    margin-right: 0.1rem;
 }

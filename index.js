@@ -14,6 +14,7 @@ window.onload = function () {
 	var spaceSeat = document.getElementById('spaceSeat');
 	for (var i = 0; i < 4; i++) {
 		var seat = new Seat('only');
+		// console.log(seat.element.dataset);
 		seat.addClass('spaceSeat');
 		seat.addClass('fl');
 		seat.appendTo(spaceSeat);
@@ -21,12 +22,20 @@ window.onload = function () {
 	var placementSeat = document.getElementById('placementSeat');
 
 	for (var i = 0; i < 4; i++) {
-		var seat = new Seat('only','design');
-		console.log(seat.element.dataset);
+		var seat = new Seat('only', 'design');
+		// console.log(seat.element.dataset);
 		seat.addClass('placementSeat');
 		seat.addClass('fr');
 		seat.appendTo(placementSeat);
 	}
+	var operatingSeat = document.getElementById('operatingSeat');
+	for (var i = 0; i < 8; i++) {
+		var seat  = new Seat();
+		console.log(seat.element.dataset);
+		seat.addClass('fl');
+		seat.appendTo(operatingSeat);
+	}
+
 
 	app.mobileResize();
 	window.onresize = function () {

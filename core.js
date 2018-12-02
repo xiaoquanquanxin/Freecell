@@ -85,6 +85,9 @@ function Seat(only, design) {
 	if (design) {
 		this.drawDesign();
 	}
+	if (only) {
+		this.setType('only', true);
+	}
 }
 
 (function () {
@@ -96,7 +99,7 @@ function Seat(only, design) {
 	Seat.prototype.designIndex = 0;
 	Seat.prototype.drawDesign = function () {
 		var type = this.designArray[Seat.prototype.designIndex++];
-		this.setType('designType',type);
+		this.setType('designType', type);
 	};
 
 }());
