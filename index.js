@@ -45,14 +45,13 @@ window.onload = function () {
 	(function () {
 		var operatingSeat = document.getElementById('operatingSeat');
 		var seats = operatingSeat.getElementsByClassName('seat');
-		var total = Card.prototype.getTotalCount();
+		var totalCard = Card.prototype.shuffle();
 		var index = 0;
-		while (index < total) {
+		while (index < totalCard.length) {
 			var seatDiv = seats[index % 8];
 			var card = new Card(index);
-			card.addClass('card');
 			card.appendTo(seatDiv);
-			card.css('top', parseInt(index / 8) * 0.2 + 'rem');
+			card.css('top', parseInt(index / 8) * 0.48 + 'rem');
 			index++;
 		}
 	}());

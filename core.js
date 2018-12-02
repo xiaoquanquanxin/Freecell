@@ -85,6 +85,7 @@ function CoreInit(tagName, type) {
 //  牌 card
 function Card(index) {
 	CoreInit.call(this, 'div', 'card');
+	this.addClass('card');
 	this.drawPoint(index);
 }
 
@@ -93,32 +94,33 @@ function Card(index) {
 	};
 	Inh.prototype = CoreInit.prototype;
 	Card.prototype = new Inh();
-	Card.prototype.setTotalCard = function () {
+	//  洗牌
+	Card.prototype.shuffle = function () {
 		var arr = [];
 		CoreInit.prototype.designArray.forEach(function (dt) {
 			CoreInit.prototype.pointsArray.forEach(function (pt) {
 				arr.push([pt, dt]);
 			})
 		});
-		arr = arr.map(function (t, i, arr) {
+		for (var i = 0; i < arr.length; i++) {
 			var spliceIndex = parseInt(Math.random() * 52);
-			var item = arr[spliceIndex];
-			arr[spliceIndex] = t;
-			return item;
-		});
-		arr.forEach(function (t) {
-			if( t[1] === "diamond"){
-				console.log(t);
-			}
-		})
-		return arr;
+			var item = arr[i];
+			arr[i] = arr[spliceIndex];
+			arr[spliceIndex] = item;
+		}
+		Card.prototype.setTotalCard = arr;
+		return arr
 	};
-	Card.prototype.getTotalCount = function () {
-		return Card.prototype.setTotalCard.length
-	};
-
 	Card.prototype.drawPoint = function (index) {
-		// console.log(index);
+		var arr = Card.prototype.setTotalCard[index];
+		this.setType('point', arr[0]);
+		this.setType('design', arr[1]);
+		this.addClass(arr[1]);
+		var span = new CoreInit('span', 'tag');
+		span.element.innerHTML = arr[0];
+		span.addClass('tag');
+		span.addClass(arr[1]);
+		span.appendTo(this.element);
 	}
 }());
 

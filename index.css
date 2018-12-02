@@ -43,6 +43,7 @@ li {
     position: relative;
     width: 1rem;
     height: 1.7320rem;
+    text-align: center;
 }
 .spaceSeat {
     margin-right: 0.1rem;
@@ -58,11 +59,11 @@ li {
 #operatingSeat > div {
     margin-right: 0.1rem;
 }
+
 .seat.spade::before, .seat.heart::before, .seat.club::before, .seat.diamond::before {
-    display: block;
-    text-align: center;
-    line-height: 1.63rem;
     color: #40a57a;
+    line-height: 1.63rem;
+    display: block;
 }
 .spade::before {
     content: '♠';
@@ -81,11 +82,25 @@ li {
 */
 /*牌*/
 .card {
-    border: 0.03rem solid;
+    border: 0.03rem solid black;
     border-radius: 0.1rem;
     position: absolute;
     background-color: white;
     width: 1rem;
     height: 1.73rem;
     left: -0.03rem;
+}
+/*牌点数*/
+.tag {
+    position: absolute;
+    top: 0;
+    left: 0;
+    font-size: 0.22rem;
+    text-indent: 0.05rem;
+}
+.card.spade::before, .card.heart::before, .card.club::before, .card.diamond::before {
+    line-height: 1.63rem;
+}
+.tag.heart, .tag.diamond, .card.heart, .card.diamond {
+    color: red;
 }
