@@ -1,5 +1,6 @@
 body {
     margin: 0;
+    border-right: 0.01rem solid;
 }
 h4 {
     margin: 0;
@@ -25,8 +26,12 @@ li {
 #container {
     margin: auto;
     width: 9.8rem;
-    padding: 0.1rem 0.1rem;
+    padding:0 0.1rem;
     background-color: #15784b;
+    height:100%;
+}
+#container>div{
+    padding-top: 0.15rem;
 }
 /*空当区*/
 #spaceSeat {
@@ -53,7 +58,6 @@ li {
 }
 /*操作区*/
 #operatingSeat {
-    padding-top: 0.15rem;
     padding-left: 0.15rem;
 }
 #operatingSeat > div {
@@ -100,6 +104,7 @@ li {
 }
 .card.spade::before, .card.heart::before, .card.club::before, .card.diamond::before {
     line-height: 1.63rem;
+    font-size: 0.6rem;
 }
 .tag.heart, .tag.diamond, .card.heart, .card.diamond {
     color: red;
