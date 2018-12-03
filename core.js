@@ -47,6 +47,9 @@ function CoreInit(tagName, type) {
 	CoreInit.prototype.getNextElement = function () {
 		return this.element.nextElementSibling;
 	};
+	CoreInit.prototype.getParentElement = function () {
+		return this.element.parentNode;
+	}
 	//  CLASS
 	CoreInit.prototype.addClass = function (cssName) {
 		if (typeof cssName === 'string') {
@@ -168,23 +171,67 @@ function Card(index) {
 	};
 	//  鼠标点击
 	CoreInit.prototype.mouseClick = function (e) {
+		//  清空激活
+		map.call(document.getElementsByClassName('active-list'), function (t) {
+			t.classList.remove('active-list');
+		});
+		map.call(document.getElementsByClassName('active-list'), function (t) {
+			t.getElementsByClassName('card-active')
+		});
+
+
 		//  this === 实例的element
 		//  instance === 实例
 		var instance = this.getInstance();
-		var color = instance.getColor();
-		var point = instance.getPoint();
-		console.log(color, point);
-		var nextElement = instance.getNextElement();
-		if (nextElement) {
-			var nextInstance = nextElement.getInstance();
-			var nIC = nextInstance.getColor();
-			var nIP = nextInstance.getPoint();
-			if (nIC !== color && nIP === point - 1) {
-				console.log('合格的nextInstance', nextInstance);
-			}
-		}
+		var parentElement = instance.getParentElement();
+		parentElement.getInstance().addClass('active-list');
+		// //  当前列每一个卡牌
+		// var siblingElement = parentElement.getElementsByClassName('card');
+		// //  当前列的每一个卡牌的实例
+		// var siblingElementInstanceArr = map.call(siblingElement, function (t) {
+		// 	return t.getInstance();
+		// });
+		// console.log(siblingElementInstanceArr);
 
-		instance.addClass('card-active');
+
+		// console.log(color, point);
+		// var nextElement = instance.getNextElement();
+		var currentElement = this;
+		//  对于选中的卡牌，要向下验证的卡牌list
+		var checkArray = [];
+		do {
+			var currentInstance = currentElement.getInstance();
+			checkArray.push({
+				color: currentInstance.getColor(),
+				point: currentInstance.getPoint(),
+				ci: currentInstance
+			});
+			currentElement = currentInstance.getNextElement();
+		} while (currentElement);
+		// console.log(checkArray);
+
+		forEach.call(checkArray, function (t) {
+			// console.log(t.point, t.color);
+		});
+		reduce.call(checkArray, function (prev, cur, index, arr) {
+			if ((prev.color !== cur.color ) && (prev.point - 1 === cur.point)) {
+				cur.ci.addClass('card-active');
+				return cur;
+			}
+			return false;
+		}, {point: (checkArray[0].point + 1)});
+		// console.log(_arr);
+
+		// if (nextElement) {
+		// 	var nextInstance = nextElement.getInstance();
+		// 	var nIC = nextInstance.getColor();
+		// 	var nIP = nextInstance.getPoint();
+		// 	if (nIC !== color && nIP === point - 1) {
+		// 		console.log('合格的nextInstance', nextInstance);
+		// 	}
+		// }
+
+		// instance.addClass('card-active');
 	};
 	//      鼠标移动
 	CoreInit.prototype.mouseMove = function (e) {

@@ -19,6 +19,9 @@ var App = (function (win) {
 		return !(win.orientation % 180);
 	}
 
+	win.forEach = Array.prototype.forEach;
+	win.map = Array.prototype.map;
+	win.reduce= Array.prototype.reduce;
 	return function () {
 		return app;
 	};

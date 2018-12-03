@@ -109,28 +109,43 @@ li {
 .red {
     color: red;
 }
-/*牌激活*/
-.card-active {
-    outline: 0.05rem dashed transparent;
-    outline-offset: 0;
-    animation: flicker 3s infinite 1s, active 0.5s 0.5s;
+/*列激活*/
+.active-list > div {
+    animation: dark-list 3s 0.5s infinite;
 }
-@keyframes flicker {
+@keyframes dark-list {
     0% {
-        outline-color: yellow
+        background-color: white
     }
     50% {
-        outline-color: deepskyblue;
+        background-color: #aaaaaa;
     }
     100% {
-        outline-color: yellow
+        background-color: white
     }
 }
-@keyframes active {
+/*牌激活*/
+.active-list >.card-active {
+    outline: 0.05rem dashed transparent;
+    outline-offset: 0;
+    animation: card-flicker 3s infinite 1s, card-activate 0.5s 0.5s;
+}
+@keyframes card-flicker {
+    0% {
+        outline-color: deepskyblue
+    }
+    50% {
+        outline-color: yellow;
+    }
+    100% {
+        outline-color: deepskyblue
+    }
+}
+@keyframes card-activate {
     0% {
         outline-color: transparent;
     }
     100% {
-        outline-color: yellow
+        outline-color: deepskyblue
     }
 }
