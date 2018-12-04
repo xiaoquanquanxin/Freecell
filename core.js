@@ -49,7 +49,10 @@ function CoreInit(tagName, type) {
 	};
 	CoreInit.prototype.getParentElement = function () {
 		return this.element.parentNode;
-	}
+	};
+	CoreInit.prototype.isLastChildren = function () {
+		return this.element.parentNode.lastChild === this.element;
+	};
 	//  CLASS
 	CoreInit.prototype.addClass = function (cssName) {
 		if (typeof cssName === 'string') {
@@ -120,12 +123,15 @@ function Card(index) {
 				arr.push([pt, dt]);
 			})
 		});
-		for (var i = 0; i < arr.length; i++) {
-			var spliceIndex = parseInt(Math.random() * 52);
-			var item = arr[i];
-			arr[i] = arr[spliceIndex];
-			arr[spliceIndex] = item;
-		}
+		(function () {
+			return;
+			for (var i = 0; i < arr.length; i++) {
+				var spliceIndex = parseInt(Math.random() * 52);
+				var item = arr[i];
+				arr[i] = arr[spliceIndex];
+				arr[spliceIndex] = item;
+			}
+		}());
 		Card.prototype.setTotalCard = arr;
 		return arr
 	};
@@ -158,46 +164,30 @@ function Card(index) {
 	//  注册事件
 	CoreInit.prototype.initEvent = function (index) {
 		this.element.addEventListener('mousedown', Card.prototype.mouseDown, false);
+		this.element.addEventListener('touchstart', Card.prototype.mouseDown, false);
 		this.element.addEventListener('click', Card.prototype.mouseClick, false);
-	};
-	//   鼠标按下
-	CoreInit.prototype.mouseDown = function (e) {
-		var target = this;
-		// console.log(this);
-		// if (index === this.cardCount() - 1) {
-		// 	document.addEventListener('mousemove', Card.prototype.mouseMove, false);
-		// }
-		e.preventDefault();
+		this.element.addEventListener('mouseup', function () {
+			document.removeEventListener('mousemove', Card.prototype.mouseMove, false);
+		}, false);
 	};
 	//  鼠标点击
 	CoreInit.prototype.mouseClick = function (e) {
+		debugger
 		//  清空激活
-		map.call(document.getElementsByClassName('active-list'), function (t) {
-			t.classList.remove('active-list');
-		});
-		map.call(document.getElementsByClassName('active-list'), function (t) {
-			t.getElementsByClassName('card-active')
-		});
-
+		var al = document.getElementsByClassName('active-list');
+		al[0] && al[0].getInstance().removeClass('active-list');
+		var ac = document.getElementsByClassName('active-card');
+		while (ac.length) {
+			ac[0].getInstance().removeClass('active-card');
+		}
 
 		//  this === 实例的element
 		//  instance === 实例
 		var instance = this.getInstance();
 		var parentElement = instance.getParentElement();
-		parentElement.getInstance().addClass('active-list');
-		// //  当前列每一个卡牌
-		// var siblingElement = parentElement.getElementsByClassName('card');
-		// //  当前列的每一个卡牌的实例
-		// var siblingElementInstanceArr = map.call(siblingElement, function (t) {
-		// 	return t.getInstance();
-		// });
-		// console.log(siblingElementInstanceArr);
-
-
-		// console.log(color, point);
-		// var nextElement = instance.getNextElement();
 		var currentElement = this;
-		//  对于选中的卡牌，要向下验证的卡牌list
+
+		parentElement.getInstance().addClass('active-list');
 		var checkArray = [];
 		do {
 			var currentInstance = currentElement.getInstance();
@@ -208,35 +198,48 @@ function Card(index) {
 			});
 			currentElement = currentInstance.getNextElement();
 		} while (currentElement);
-		// console.log(checkArray);
 
-		forEach.call(checkArray, function (t) {
-			// console.log(t.point, t.color);
-		});
 		reduce.call(checkArray, function (prev, cur, index, arr) {
 			if ((prev.color !== cur.color ) && (prev.point - 1 === cur.point)) {
-				cur.ci.addClass('card-active');
+				cur.ci.addClass('active-card');
+				if (cur.ci.isLastChildren()) {
+					checkArray.forEach(function (t) {
+						t.ci.addClass('out-line');
+					});
+					checkArray[0].ci.setType('active', true);
+				}
 				return cur;
 			}
 			return false;
 		}, {point: (checkArray[0].point + 1)});
-		// console.log(_arr);
-
-		// if (nextElement) {
-		// 	var nextInstance = nextElement.getInstance();
-		// 	var nIC = nextInstance.getColor();
-		// 	var nIP = nextInstance.getPoint();
-		// 	if (nIC !== color && nIP === point - 1) {
-		// 		console.log('合格的nextInstance', nextInstance);
-		// 	}
-		// }
-
-		// instance.addClass('card-active');
+		CoreInit.prototype.moveHeadCard = checkArray[0].ci;
+	};
+	//   鼠标按下
+	CoreInit.prototype.mouseDown = function (e) {
+		var instance = this.getInstance();
+		if (instance.getType('active')) {
+			instance.setType('offsetX', e.offsetX);
+			instance.setType('offsetY', e.offsetY);
+			instance.setType('clientX', e.clientX);
+			instance.setType('clientY', e.clientY);
+			instance.setType('originX', instance.element.offsetLeft);
+			instance.setType('originY', instance.element.offsetTop);
+			document.addEventListener('mousemove', Card.prototype.mouseMove, false);
+			window.addEventListener('touchmove', Card.prototype.mouseMove, false);
+		}
+		// e.preventDefault();
 	};
 	//      鼠标移动
 	CoreInit.prototype.mouseMove = function (e) {
-		console.log(e)
-		console.log(e.target)
+		debugger;
+		var instance = CoreInit.prototype.moveHeadCard;
+		var diffY = e.clientY - instance.getType('clientY');
+		var diffX = e.clientX - instance.getType('clientX');
+		instance.css('top', diffY + Number(instance.getType('originY')) + 'px');
+		instance.css('left', diffX + Number(instance.getType('originX')) + 'px');
+		// CoreInit.prototype.checkArray.forEach(function (t) {
+		// console.log(t.ci.css('position', 'absolute').css('top', e.clientX + 'px').css('left', e.clientY + 'px'));
+		// })
 	}
 
 }());

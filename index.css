@@ -111,7 +111,8 @@ li {
 }
 /*列激活*/
 .active-list > div {
-    animation: dark-list 3s 0.5s infinite;
+    /*animation: dark-list 3s 0.5s infinite;*/
+    background-color: #aaaaaa;
 }
 @keyframes dark-list {
     0% {
@@ -125,10 +126,13 @@ li {
     }
 }
 /*牌激活*/
-.active-list >.card-active {
-    outline: 0.05rem dashed transparent;
+.active-list > .active-card {
+    background-color: white;
     outline-offset: 0;
-    animation: card-flicker 3s infinite 1s, card-activate 0.5s 0.5s;
+    /*animation: card-flicker 3s infinite 1s, card-activate 0.5s 0.5s;*/
+}
+.active-list > .active-card.out-line {
+    outline: 0.05rem dashed deepskyblue;
 }
 @keyframes card-flicker {
     0% {
