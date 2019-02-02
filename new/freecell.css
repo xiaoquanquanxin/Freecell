@@ -107,3 +107,13 @@
 .red {
     color: red;
 }
+
+
+
+
+/**
+    激活牌的样式
+*/
+.activate{
+    outline:3px dashed royalblue;
+}

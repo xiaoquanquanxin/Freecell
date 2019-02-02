@@ -7,6 +7,7 @@ function CoreElement(options) {
     (options.classList || []).forEach(function (t) {
         _this.classList.add(t);
     });
+    this.element.core = this;
 }
 //  DOM
 CoreElement.prototype.appendTo = function (aim) {
@@ -109,7 +110,9 @@ function CreateCard(options) {
     CoreElement.call(this, options);
     this.classList.add('card');
     this.classList.add('abs');
+    this.classList.add('index-' + options.cardIndex);
     this.classList.add(options.color);
+    this.cardIndex = options.cardIndex;
     this.element.innerHTML = options.points;
     var cardPlaceholder = new CreateCardPlaceholder(options);
     this.element.appendChild(cardPlaceholder.element);
@@ -128,11 +131,17 @@ function CreateCardPlaceholder(options) {
     options.classList = options.classList || [];
     options.classList.push('abs');
     options.classList.push('card-design');
-    options.classList.push('points' + options.point);
     options.classList.push(options.design);
     CoreElement.call(this, options);
 }
+(function () {
+    function Temp() {
+    }
 
+    Temp.prototype = CoreElement.prototype;
+    CreateCardPlaceholder.prototype = new Temp();
+
+}());
 
 /**
  * initData
@@ -142,10 +151,13 @@ function CreateCardPlaceholder(options) {
     Core.designArray = ['spade', 'heart', 'club', 'diamond'];
     Core.designIndex = 3;
     Core.pointsArray = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
-    Core.initData = [];
+    Core.initData = [];         //  所有牌的数据
     for (var j = Core.pointsArray.length - 1; j >= 0; j--) {
         for (var i = 0; i < Core.designArray.length; i++) {
-            Core.initData.push({design: Core.designArray[i], points: Core.pointsArray[j]});
+            Core.initData.push({design: Core.designArray[i], points: Core.pointsArray[j], cardIndex: j});
         }
     }
+    Core.activateList = [];     //  被激活牌的list
+    Core.isActivity = false;    //  是否可以移动了
+
 }(window));
