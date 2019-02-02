@@ -2,6 +2,7 @@ window.onload = function () {
 //  空挡
     var freeCell = document.querySelector('.free-cell');
     freeCell.determineCell = freeCell.querySelectorAll('.determine-cell');
+    Core.determineCell.freeCell = freeCell.determineCell;
     compatibility.callFn(compatibility.forEach, freeCell.determineCell, [function (t, i) {
         var left = i * 120;
         t.style.left = left + 'px';
@@ -13,6 +14,9 @@ window.onload = function () {
 //  得分
     var pointCell = document.querySelector('.point-cell');
     pointCell.determineCell = pointCell.querySelectorAll('.determine-cell');
+
+    Core.determineCell.pointCell = pointCell.determineCell;
+
     compatibility.callFn(compatibility.forEach, pointCell.determineCell, [function (t, i, arr) {
         var right = (Core.designIndex - i) * 120;
         t.style.right = right + 'px';
@@ -29,6 +33,9 @@ window.onload = function () {
 //  牌堆
     var initCell = document.querySelector('.init-cell');
     initCell.determineCell = initCell.querySelectorAll('.determine-cell');
+
+    Core.determineCell.initCell = initCell.determineCell;
+
     compatibility.callFn(compatibility.forEach, initCell.determineCell, [function (t, i) {
         var left = i * 120 + 10;
         t.style.left = left + 'px';
@@ -156,12 +163,14 @@ window.onload = function () {
                 //  卡牌原来的位置
                 Core.activateHead.offsetLeft = coreCard.element.offsetLeft;
                 Core.activateHead.offsetTop = coreCard.element.offsetTop;
+                //console.log('注册mousemove');
                 compatibility.eventListener(container, 'mousemove', compatibilityMousemove);
             }
         }
 
         //  移动卡牌组
         function compatibilityMousemove(e) {
+            //console.log('mousemove');
             if (!Core.isActivity) {
                 return;
             }
@@ -189,6 +198,8 @@ window.onload = function () {
         //  鼠标弹起
         compatibility.eventListener(container, 'mouseup', function (e) {
             Core.isActivity = false;
+            //console.log('移除');
+            compatibility.removeListener(container, 'mousemove', compatibilityMousemove);
             if (!Core.isMoved) {
                 return;
             }
@@ -197,31 +208,84 @@ window.onload = function () {
 
             var clientX = event.clientX;
             var clientY = event.clientY;
-            //  左 , 右 , 下
-            compatibility.callFn(compatibility.forEach, Core.determineCellPos.freeCell, [function (t,i) {
-                //console.log(clientX, t.left);
-                //console.log(clientX, t.right);
-                //console.log(clientY, t.top);
-                //console.log(clientY, t.bottom);
+
+
+            console.log(clientX,clientY);
+            var isPlaced = false;
+            //  左 , 右 , 下 三个循环
+            //  可以扔到哪儿
+            if (Core.activateList.length === 1) {
+                var target = Core.activateList[0];
+                compatibility.callFn(compatibility.forEach, Core.determineCellPos.freeCell, [function (t, i) {
+                    if (clientX >= t.left && clientX <= t.right && clientY >= t.top && clientY <= t.bottom) {
+                        console.log('鼠标释放位置对了');
+                        isPlaced = true;
+                        var freecell = Core.determineCell.freeCell[i];
+                        //  说明是空位
+                        if (!freecell.querySelector('.card')) {
+                            target.appendTo(freecell);
+                            target.css('top', '0');
+                            target.css('left', '0');
+                        }
+
+                    }
+                }]);
+                compatibility.callFn(compatibility.forEach, Core.determineCellPos.pointCell, [function (t, i) {
+                    if (clientX >= t.left && clientX <= t.right && clientY >= t.top && clientY <= t.bottom) {
+                        console.log('鼠标释放位置对了');
+                        var pointCell = Core.determineCell.pointCell[i];
+                        /**
+                         *
+                         * 这个地方的判断有严重的漏洞,这是由于最开始考虑不周造成的
+                         *
+                         * **/
+                        var pointDesign = pointCell.querySelectorAll('.cell')[0].classList[0];
+                        var targetDesign = target.element.querySelectorAll('.card-design')[0].classList[2];
+                        //  判断花色
+                        if (pointDesign !== targetDesign) {
+                            return;
+                        }
+                        //  判断点数
+                        var cardList = pointCell.querySelectorAll('.card');
+                        //var card
+
+                        //  已经存了 多 张牌
+                        if (cardList.length) {
+                            if (cardList[cardList.length - 1].core.cardIndex + 1 === target.cardIndex) {
+                                isPlaced = true;
+                            }
+                        } else {
+                            if (target.cardIndex === 0) {
+                                isPlaced = true;
+                            }
+                        }
+                        if (isPlaced) {
+                            target.appendTo(pointCell);
+                            target.css('top', '0');
+                            target.css('left', '0');
+                        }
+                    }
+                }]);
+            }
+            compatibility.callFn(compatibility.forEach, Core.determineCellPos.initCell, [function (t, i) {
                 if (clientX >= t.left && clientX <= t.right && clientY >= t.top && clientY <= t.bottom) {
-                    console.log(t);
-                    console.log(i)
+                    console.log('鼠标释放位置对了');
+                    console.log(Core.determineCell.initCell[i]);
                 }
-            }]);
-            compatibility.callFn(compatibility.forEach, Core.determineCellPos.pointCell, [function (t) {
-            }]);
-            compatibility.callFn(compatibility.forEach, Core.determineCellPos.initCell, [function (t) {
             }]);
 
 
             compatibility.callFn(compatibility.map, Core.activateList, [function (t) {
                 t.removeClass('z-index');
                 t.removeClass('activate');
-                t.css('left', Core.activateHead.offsetLeft + 'px');
-                t.css('top', Core.activateHead.offsetTop + 'px');
+                if (!isPlaced) {
+                    t.css('left', Core.activateHead.offsetLeft + 'px');
+                    t.css('top', Core.activateHead.offsetTop + 'px');
+                }
             }]);
+
             Core.activateHead = {};
-            compatibility.removeListener(container, 'mousemove', compatibilityMousemove);
         });
     }());
+    //console.log(Core.determineCellPos)
 };

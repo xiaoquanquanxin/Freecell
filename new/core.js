@@ -161,9 +161,16 @@ function CreateCardPlaceholder(options) {
     Core.isActivity = false;    //  是否可以移动了
     Core.isMoved = false;       //  上一步操作了移动
     Core.activateHead = {};     //  被激活列表里第一个DOM的信息:position,index,color
-    Core.determineCellPos = {
+    Core.determineCell = {
+        /********空当*********/
         freeCell: [],           //  左上角
         pointCell: [],          //  得分位
         initCell: [],           //  初始位置
-    }
+    };
+    Core.determineCellPos = {
+        /*********空当的位置***********/
+        freeCell: [],           //  左上角
+        pointCell: [],          //  得分位
+        initCell: [],           //  初始位置
+    };
 }(window));
