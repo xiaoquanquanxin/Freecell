@@ -159,5 +159,11 @@ function CreateCardPlaceholder(options) {
     }
     Core.activateList = [];     //  被激活牌的list
     Core.isActivity = false;    //  是否可以移动了
-
+    Core.isMoved = false;       //  上一步操作了移动
+    Core.activateHead = {};     //  被激活列表里第一个DOM的信息:position,index,color
+    Core.determineCellPos = {
+        freeCell: [],           //  左上角
+        pointCell: [],          //  得分位
+        initCell: [],           //  初始位置
+    }
 }(window));

@@ -2,10 +2,6 @@ document.addEventListener('mousedown', function (e) {
     e.preventDefault();
 }, false);
 
-function callFn(fn, obj, args) {
-    return Function.prototype.apply.call(fn, obj, args);
-}
-
 
 var compatibility = {};
 compatibility.eventListener = function (aim, eventType, fn) {
@@ -17,6 +13,13 @@ compatibility.eventListener = function (aim, eventType, fn) {
         throw  new Error('不支持二级DOM事件');
     }
 };
+compatibility.removeListener = function (aim, eventType, fn) {
+    if (aim.removeEventListener) {
+        aim.removeEventListener(eventType, fn, false);
+    } else if (aim.detachEvent) {
+        aim.detachEvent('on' + eventType, fn);
+    }
+};
 
 compatibility.event = function (e) {
     return e || window.event;
@@ -24,3 +27,12 @@ compatibility.event = function (e) {
 compatibility.target = function (e) {
     return e.target || e.srcElement;
 };
+
+
+//  call
+compatibility.callFn = function (fn, obj, args) {
+    return Function.prototype.apply.call(fn, obj, args);
+};
+
+compatibility.map = Array.prototype.map;
+compatibility.forEach = Array.prototype.forEach;
