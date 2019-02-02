@@ -1,0 +1,113 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>操蛋!!!</title>
+    <link rel="stylesheet" href="./freecell.css">
+</head>
+<body>
+<div id="container" class="abs">
+    <div class="free-cell abs">
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+    </div>
+    <div class="point-cell abs">
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+    </div>
+    <div class="init-cell abs">
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+        <div class="determine-cell abs"></div>
+    </div>
+</div>
+<script src="core.js"></script>
+
+<script>
+
+
+
+
+    //  空挡
+    var freeCell = document.querySelector('.free-cell');
+    freeCell.determineCell = freeCell.querySelectorAll('.determine-cell');
+    callFn(Array.prototype.forEach, freeCell.determineCell, [function (t, i) {
+        var left = i * 120;
+        t.style.left = left + 'px';
+        freeCell.determineCellPos = freeCell.determineCellPos || [];
+        freeCell.determineCellPos.push({top: 0, left: left, bottom: 173, right: 120 + left});
+        var placeholder = new CellPlaceholder();
+        t.appendChild(placeholder.element);
+    }]);
+
+    //  得分
+    var pointCell = document.querySelector('.point-cell');
+    pointCell.determineCell = pointCell.querySelectorAll('.determine-cell');
+    callFn(Array.prototype.forEach, pointCell.determineCell, [function (t, i, arr) {
+        var right = (Core.designIndex - i) * 120;
+        t.style.right = right + 'px';
+        pointCell.determineCellPos = pointCell.determineCellPos || [];
+        pointCell.determineCellPos.push({
+            top: 0,
+            left: pointCell.offsetLeft + t.offsetLeft,
+            bottom: 173,
+            right: 120 + pointCell.offsetLeft + t.offsetLeft
+        });
+        var placeholder = new CellPlaceholder({classList: [Core.designArray[i]]});
+        t.appendChild(placeholder.element);
+    }]);
+
+    //  初始
+    var initCell = document.querySelector('.init-cell');
+    initCell.determineCell = initCell.querySelectorAll('.determine-cell');
+    callFn(Array.prototype.forEach, initCell.determineCell, [function (t, i) {
+        var left = i * 120 + 10;
+        t.style.left = left + 'px';
+        initCell.determineCellPos = initCell.determineCellPos || [];
+        initCell.determineCellPos.push({
+            top: initCell.offsetTop,
+            left: left,
+            bottom: initCell.offsetTop + t.offsetHeight,
+            right: left + 120,
+        });
+        var placeholder = new CellPlaceholder();
+        t.appendChild(placeholder.element);
+    }]);
+
+    //  创造牌
+    Core.initData.forEach(function (t, i) {
+        var design = t.design;
+        var color = 'red';
+        switch (design) {
+            case 'spade':
+            case 'club':
+                color = 'black';
+                break;
+        }
+        t.color = color;
+        var card = new CreateCard({design: t.design, points: t.points, color: color}).element;
+        card.style.top = parseInt(i / 8) * 50 + 'px';
+        initCell.determineCell[i % 8].appendChild(card);
+    })
+
+
+</script>
+
+<script>
+    //    console.log(freeCell.determineCellPos);
+    //        console.log(pointCell.determineCellPos);
+    //        console.log(pointCell.determineCell);
+    //    console.log(initCell.determineCellPos);
+
+</script>
+</body>
+</html>
