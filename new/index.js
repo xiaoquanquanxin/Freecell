@@ -6,7 +6,6 @@ window.onload = function () {
     compatibility.callFn(compatibility.forEach, freeCell.determineCell, [function (t, i) {
         var left = i * 120;
         t.style.left = left + 'px';
-        Core.determineCellPos.freeCell.push({top: 0, left: left, bottom: 173, right: 120 + left});
         var placeholder = new CellPlaceholder();
         t.appendChild(placeholder.element);
     }]);
@@ -210,7 +209,7 @@ window.onload = function () {
             var clientY = event.clientY;
 
 
-            console.log(clientX,clientY);
+            console.log(clientX, clientY);
             var isPlaced = false;
             //  左 , 右 , 下 三个循环
             //  可以扔到哪儿
@@ -287,5 +286,23 @@ window.onload = function () {
             Core.activateHead = {};
         });
     }());
-    //console.log(Core.determineCellPos)
+
+    function resetDetermineCellPos() {
+        var containerLeft = container.offsetLeft;
+        var containerTop = container.offsetTop;
+        Core.determineCellPos.freeCell = [];
+        compatibility.callFn(compatibility.forEach, freeCell.determineCell, [function (t, i) {
+            var left = i * 120 + containerLeft;
+            var top = 0 + containerTop;
+            Core.determineCellPos.freeCell.push({top: top, left: left, bottom: top + 173, right: 120 + left});
+        }]);
+
+
+
+    }
+
+    resetDetermineCellPos();
+    compatibility.eventListener(window, 'reisze', function () {
+        resetDetermineCellPos();
+    })
 };
