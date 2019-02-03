@@ -38,6 +38,9 @@ window.onload = function () {
 			var left = i * 120 + 10;
 			t.style.left = left + 'px';
 			var placeholder = new CellPlaceholder();
+			while (t.hasChildNodes()) {
+				t.removeChild(t.firstChild);
+			}
 			t.appendChild(placeholder.element);
 		}]);
 	};
