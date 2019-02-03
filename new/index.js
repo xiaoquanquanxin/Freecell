@@ -352,7 +352,7 @@ window.onload = function () {
 				arr.push({
 					design: Core.designArray[item.designIndex],
 					designLogo: Core.designLogoArray[item.designIndex],
-					color: (item.designIndex) ? 'red' : 'black',
+					color: (item.designIndex%2) ? 'red' : 'black',
 					points: Core.pointsArray[item.cardIndex],
 					cardIndex: item.cardIndex
 				})
