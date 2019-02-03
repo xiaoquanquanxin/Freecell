@@ -36,3 +36,4 @@ compatibility.callFn = function (fn, obj, args) {
 
 compatibility.map = Array.prototype.map;
 compatibility.forEach = Array.prototype.forEach;
+compatibility.reduce = Array.prototype.reduce;
