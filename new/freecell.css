@@ -98,10 +98,22 @@ body, html {
     激活牌的样式
 */
 .activate {
+    outline: 3px dashed red;
+    outline: 3px solid red \0;
+}
+.highlight {
     outline: 3px dashed royalblue;
-    outline: 3px solid royalblue\0;
+    outline: 3px solid royalblue \0;
 }
 .z-index {
     z-index: +100;
+}
+button {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    font-size: 20px;
+    cursor: pointer;
+    border: 1px solid royalblue;
 }
 

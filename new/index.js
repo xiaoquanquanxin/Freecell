@@ -1,51 +1,76 @@
 window.onload = function () {
-//  空挡
 	var freeCell = document.querySelector('.free-cell');
-	freeCell.determineCell = freeCell.querySelectorAll('.determine-cell');
-	Core.determineCell.freeCell = freeCell.determineCell;
-	compatibility.callFn(compatibility.forEach, freeCell.determineCell, [function (t, i) {
-		var left = i * 120;
-		t.style.left = left + 'px';
-		var placeholder = new CellPlaceholder();
-		t.appendChild(placeholder.element);
-	}]);
-
-//  得分
 	var pointCell = document.querySelector('.point-cell');
-	pointCell.determineCell = pointCell.querySelectorAll('.determine-cell');
-
-	Core.determineCell.pointCell = pointCell.determineCell;
-
-	compatibility.callFn(compatibility.forEach, pointCell.determineCell, [function (t, i, arr) {
-		var right = (Core.designIndex - i) * 120;
-		t.style.right = right + 'px';
-		var placeholder = new CellPlaceholder({classList: [Core.designArray[i]]});
-		t.appendChild(placeholder.element);
-	}]);
-
-//  牌堆
 	var initCell = document.querySelector('.init-cell');
-	initCell.determineCell = initCell.querySelectorAll('.determine-cell');
-	Core.determineCell.initCell = initCell.determineCell;
-	compatibility.callFn(compatibility.forEach, initCell.determineCell, [function (t, i) {
-		var left = i * 120 + 10;
-		t.style.left = left + 'px';
-		var placeholder = new CellPlaceholder();
-		t.appendChild(placeholder.element);
-	}]);
-
+//  空挡
+	Core.crateFreeCell = function () {
+		freeCell.determineCell = freeCell.querySelectorAll('.determine-cell');
+		Core.determineCell.freeCell = freeCell.determineCell;
+		compatibility.callFn(compatibility.forEach, freeCell.determineCell, [function (t, i) {
+			var left = i * 120;
+			t.style.left = left + 'px';
+			var placeholder = new CellPlaceholder();
+			while (t.hasChildNodes()) {
+				t.removeChild(t.firstChild);
+			}
+			t.appendChild(placeholder.element);
+		}]);
+	};
+//  得分
+	Core.cratePointCell = function () {
+		pointCell.determineCell = pointCell.querySelectorAll('.determine-cell');
+		Core.determineCell.pointCell = pointCell.determineCell;
+		compatibility.callFn(compatibility.forEach, pointCell.determineCell, [function (t, i, arr) {
+			var right = (Core.designIndex - i) * 120;
+			t.style.right = right + 'px';
+			var placeholder = new CellPlaceholder({classList: [Core.designArray[i]]});
+			while (t.hasChildNodes()) {
+				t.removeChild(t.firstChild);
+			}
+			t.appendChild(placeholder.element);
+		}]);
+	};
+//  牌堆
+	Core.crateInitCell = function () {
+		initCell.determineCell = initCell.querySelectorAll('.determine-cell');
+		Core.determineCell.initCell = initCell.determineCell;
+		compatibility.callFn(compatibility.forEach, initCell.determineCell, [function (t, i) {
+			var left = i * 120 + 10;
+			t.style.left = left + 'px';
+			var placeholder = new CellPlaceholder();
+			t.appendChild(placeholder.element);
+		}]);
+	};
 //  创造牌
-	Core.initData.forEach(function (t, i) {
-		var card = new CreateCard({
-			design: t.design,
-			designLogo: t.designLogo,
-			points: t.points,
-			color: t.color,
-			cardIndex: t.cardIndex
-		}).element;
-		card.style.top = parseInt(i / 8) * 50 + 'px';
-		initCell.determineCell[i % 8].appendChild(card);
-	});
+	Core.createCard = function () {
+		initCell.determineCell = initCell.querySelectorAll('.determine-cell');
+		//  清除牌堆
+		compatibility.callFn(compatibility.forEach, initCell.determineCell, [function (t, i) {
+			var cards = t.querySelectorAll('.card');
+			compatibility.callFn(compatibility.forEach, cards, [function (item, index) {
+				item.core.removeFrom(item.parentNode);
+			}]);
+		}]);
+		Core.initData.forEach(function (t, i) {
+			var card = new CreateCard({
+				design: t.design,
+				designLogo: t.designLogo,
+				points: t.points,
+				color: t.color,
+				cardIndex: t.cardIndex
+			}).element;
+			card.style.top = parseInt(i / 8) * 50 + 'px';
+			initCell.determineCell[i % 8].appendChild(card);
+		});
+	};
+	Core.init = function () {
+		Core.crateFreeCell();
+		Core.cratePointCell();
+		Core.crateInitCell();
+		Core.createCard();
+	};
+
+	Core.init();
 
 
 	//  获得上一个dom的实例
@@ -80,6 +105,7 @@ window.onload = function () {
 			//  先要把上一次被激活的卡牌置为普通
 			compatibility.callFn(compatibility.map, Core.activateList, [function (t) {
 				t.removeClass('activate');
+				t.removeClass('highlight');
 			}]);
 			Core.activateList = [coreCard];                     //  那些牌需要激活的list
 			Core.isActivity = true;
@@ -110,6 +136,9 @@ window.onload = function () {
 			//  给激活卡牌设置样式
 			compatibility.callFn(compatibility.map, Core.activateList, [function (t) {
 				t.addClass('activate');
+				if (Core.isActivity) {
+					t.addClass('highlight');
+				}
 			}]);
 //            console.log(Core.activateList);
 //            console.log(Core.isActivity);
@@ -161,23 +190,14 @@ window.onload = function () {
 				return;
 			}
 			var event = compatibility.event(e);
-			var target = compatibility.target(event);
-			var coreCard = getTargetCore(target);
-			if (!coreCard) {
-				return;
-			}
-			//console.log(Core.activateHead.relativeX);
-			var mouseClientX = e.clientX;
-			var mouseClientY = e.clientY;
-
-			// console.clear();
+			var mouseClientX = event.clientX;
+			var mouseClientY = event.clientY;
 			compatibility.callFn(compatibility.map, Core.activateList, [function (t, i) {
 				t.addClass('z-index');
 				var diffX = mouseClientX - Core.activateHead.clientX;
 				var diffY = mouseClientY - Core.activateHead.clientY + Core.activateHead.offsetTop;
 				t.css('left', diffX + 'px');
 				t.css('top', diffY + i * 50 + 'px');
-				// console.log(Core.activateHead.clientY, diffY, i * 50);
 			}]);
 			Core.isMoved = true;
 		}
@@ -202,9 +222,9 @@ window.onload = function () {
 			//  左 , 右 , 下 三个循环
 			//  可以扔到哪儿
 			//  被激活的队列里有几个dom
-			var _len = Core.activateList.length;
+			var _activateListLen = Core.activateList.length;
 			var target = Core.activateHead.element;
-			if (_len === 1) {
+			if (_activateListLen === 1) {
 				compatibility.callFn(compatibility.forEach, Core.determineCellPos.freeCell, [function (t, i) {
 					if (clientX >= t.left && clientX <= t.right && clientY >= t.top && clientY <= t.bottom) {
 						// console.log('鼠标释放位置对了,freecell');
@@ -261,36 +281,37 @@ window.onload = function () {
 				if (clientX >= t.left && clientX <= t.right && clientY >= t.top && clientY <= t.bottom) {
 					var _initCell = Core.determineCell.initCell[i];
 					// console.log('鼠标释放位置对了', initCell);
-					if (_len > getMaxMoveCount()) {
-						alert('无法同时移动这么多牌,你只能移动左上角空格个数+牌堆空格数');
+					if (_activateListLen > getMaxMoveCount()) {
+						alert('无法同时移动这么多牌,你只能移动左上角空格个数+牌堆空格数+1张牌数');
 						return;
 					}
 					var cardList = _initCell.querySelectorAll('.card');
-					//  最后一个
-					var coreListLastOne = cardList[cardList.length - 1].core;
-					// console.log(coreListLastOne);
-					//  判断点数                            当前牌的点数
-					if (coreListLastOne.cardIndex - 1 !== target.cardIndex) {
-						// console.log('点数不匹配');
-						return
-					}
-					if (coreListLastOne.color === target.color) {
-						// console.log('颜色不匹配');
-						return
-					}
-					console.log('成了');
-					isPlaced = true;
-					if (_len === 1) {
-						target.appendTo(_initCell);
-						target.css('top', 50 + coreListLastOne.element.offsetTop + 'px');
-						target.css('left', '0');
+					if (cardList.length === 0) {
+						var coreListLastOne = _initCell.querySelector('.cell').core;
+						coreListLastOne._tempOffsetTop = -50;
 					} else {
-						compatibility.callFn(compatibility.map, Core.activateList, [function (t, i) {
-							t.appendTo(_initCell);
-							t.css('top', 50 * (i + 1) + coreListLastOne.element.offsetTop + 'px');
-							t.css('left', '0');
-						}]);
+						//  最后一个
+						coreListLastOne = cardList[cardList.length - 1].core;
+						coreListLastOne._tempOffsetTop = 0;
+						//  判断点数                            当前牌的点数
+						if (coreListLastOne.cardIndex - 1 !== target.cardIndex) {
+							// console.log('点数不匹配');
+							return
+						}
+						if (coreListLastOne.color === target.color) {
+							// console.log('颜色不匹配');
+							return
+						}
 					}
+					// console.log(coreListLastOne);
+
+					// console.log('成了');
+					isPlaced = true;
+					compatibility.callFn(compatibility.map, Core.activateList, [function (t, i) {
+						t.appendTo(_initCell);
+						t.css('top', 50 * (i + 1) + coreListLastOne.element.offsetTop + coreListLastOne._tempOffsetTop + 'px');
+						t.css('left', '0');
+					}]);
 				}
 			}]);
 
@@ -298,6 +319,7 @@ window.onload = function () {
 			compatibility.callFn(compatibility.map, Core.activateList, [function (t, i) {
 				t.removeClass('z-index');
 				t.removeClass('activate');
+				t.removeClass('highlight');
 				if (!isPlaced) {
 					if (t === Core.activateHead.element) {
 						t.css('top', Core.activateHead.offsetTop + 'px');
@@ -316,6 +338,29 @@ window.onload = function () {
 		compatibility.eventListener(window, 'resize', function () {
 			resetDetermineCellPos();
 		});
+
+		//  换一关
+		var button = document.querySelector('button');
+		compatibility.eventListener(button, 'click', function () {
+			if (Core.checkPoint) {
+				alert('建数据麻烦,忍忍吧,就这一关,(๑•́ωก̀๑)');
+				return;
+			}
+			var arr = [];
+			for (var i = 0; i < Core.database.length; i++) {
+				var item = Core.database[i];
+				arr.push({
+					design: Core.designArray[item.designIndex],
+					designLogo: Core.designLogoArray[item.designIndex],
+					color: (item.designIndex) ? 'red' : 'black',
+					points: Core.pointsArray[item.cardIndex],
+					cardIndex: item.cardIndex
+				})
+			}
+			Core.initData = arr;
+			Core.checkPoint = true;
+			Core.init();
+		})
 	}());
 
 	//  每当window resize 的时候都要调用

@@ -158,6 +158,7 @@ function CreateCardPlaceholder(options) {
 	Core.designLogoArray = ['♠', '♥', '♣', '♦'];
 	Core.designIndex = 3;
 	Core.pointsArray = ["A", "2", "3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K"];
+	// Core.pointsArray = ["A", "2",  ];
 	Core.initData = [];         //  所有牌的数据
 	for (var j = Core.pointsArray.length - 1; j >= 0; j--) {
 		for (var i = 0; i < Core.designArray.length; i++) {
@@ -170,6 +171,67 @@ function CreateCardPlaceholder(options) {
 			});
 		}
 	}
+	// console.log(Core.initData);
+	Core.database = [
+		{designIndex: 1, cardIndex: 12},
+		{designIndex: 0, cardIndex: 2},
+		{designIndex: 1, cardIndex: 4},
+		{designIndex: 0, cardIndex: 5},
+		{designIndex: 1, cardIndex: 8},
+		{designIndex: 3, cardIndex: 10},
+		{designIndex: 2, cardIndex: 9},
+		{designIndex: 0, cardIndex: 4},
+
+		{designIndex: 1, cardIndex: 9},
+		{designIndex: 1, cardIndex: 11},
+		{designIndex: 0, cardIndex: 7},
+		{designIndex: 2, cardIndex: 10},
+		{designIndex: 1, cardIndex: 1},
+		{designIndex: 2, cardIndex: 2},
+		{designIndex: 3, cardIndex: 12},
+		{designIndex: 3, cardIndex: 4},
+
+		{designIndex: 0, cardIndex: 6},
+		{designIndex: 3, cardIndex: 9},
+		{designIndex: 0, cardIndex: 12},
+		{designIndex: 0, cardIndex: 3},
+		{designIndex: 3, cardIndex: 5},
+		{designIndex: 1, cardIndex: 2},
+		{designIndex: 0, cardIndex: 1},
+		{designIndex: 2, cardIndex: 4},
+
+		{designIndex: 1, cardIndex: 7},
+		{designIndex: 3, cardIndex: 2},
+		{designIndex: 1, cardIndex: 5},
+		{designIndex: 3, cardIndex: 11},
+		{designIndex: 0, cardIndex: 8},
+		{designIndex: 3, cardIndex: 8},
+		{designIndex: 2, cardIndex: 1},
+		{designIndex: 3, cardIndex: 6},
+
+		{designIndex: 2, cardIndex: 6},
+		{designIndex: 2, cardIndex: 5},
+		{designIndex: 3, cardIndex: 7},
+		{designIndex: 2, cardIndex: 3},
+		{designIndex: 3, cardIndex: 1},
+		{designIndex: 0, cardIndex: 11},
+		{designIndex: 1, cardIndex: 0},
+		{designIndex: 2, cardIndex: 0},
+
+		{designIndex: 3, cardIndex: 0},
+		{designIndex: 1, cardIndex: 10},
+		{designIndex: 0, cardIndex: 9},
+		{designIndex: 2, cardIndex: 12},
+		{designIndex: 1, cardIndex: 3},
+		{designIndex: 0, cardIndex: 10},
+		{designIndex: 2, cardIndex: 7},
+		{designIndex: 3, cardIndex: 3},
+
+		{designIndex: 0, cardIndex: 0},
+		{designIndex: 2, cardIndex: 11},
+		{designIndex: 1, cardIndex: 6},
+		{designIndex: 2, cardIndex: 8},
+	];
 	Core.activateList = [];     //  被激活牌的list
 	Core.isActivity = false;    //  是否可以移动了
 	Core.isMoved = false;       //  上一步操作了移动
@@ -187,3 +249,5 @@ function CreateCardPlaceholder(options) {
 		initCell: [],           //  初始位置
 	};
 }(window));
+
+
