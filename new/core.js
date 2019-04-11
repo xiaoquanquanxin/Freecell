@@ -100,7 +100,7 @@ function CellPlaceholder(options) {
 
 	Temp.prototype = CoreElement.prototype;
 	CellPlaceholder.prototype = new Temp();
-
+	CellPlaceholder.prototype.constructor = CellPlaceholder;
 }());
 
 
@@ -128,7 +128,7 @@ function CreateCard(options) {
 
 	Temp.prototype = CoreElement.prototype;
 	CreateCard.prototype = new Temp();
-
+	CreateCard.prototype.constructor = CreateCard;
 }());
 
 function CreateCardPlaceholder(options) {
@@ -146,7 +146,7 @@ function CreateCardPlaceholder(options) {
 
 	Temp.prototype = CoreElement.prototype;
 	CreateCardPlaceholder.prototype = new Temp();
-
+    CreateCardPlaceholder.prototype.constructor = CreateCardPlaceholder;
 }());
 
 /**
